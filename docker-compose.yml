@@ -1,0 +1,22 @@
+# Local development database only. Production uses Netlify Database (Postgres).
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: betterdays-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: betterdays
+      POSTGRES_PASSWORD: betterdays_dev
+      POSTGRES_DB: betterdays
+    ports:
+      - '5432:5432'
+    volumes:
+      - betterdays_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U betterdays -d betterdays']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  betterdays_pgdata:

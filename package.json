@@ -1,0 +1,44 @@
+{
+  "name": "betterdays",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "node scripts/migrate.mjs",
+    "icons:generate": "node scripts/generate-icons.mjs"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "@auth/pg-adapter": "1.11.3",
+    "bcryptjs": "2.4.3",
+    "next": "16.3.4",
+    "next-auth": "5.0.0-beta.32",
+    "pg": "8.13.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "recharts": "2.15.0",
+    "tailwind-merge": "2.6.0",
+    "zod": "3.24.1"
+  },
+  "devDependencies": {
+    "@tabler/icons-webfont": "3.28.1",
+    "@types/bcryptjs": "2.4.6",
+    "@types/node": "20.17.12",
+    "@types/pg": "8.11.10",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "autoprefixer": "10.4.20",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.4",
+    "postcss": "8.5.28",
+    "sharp": "0.35.4",
+    "tailwindcss": "3.4.17",
+    "typescript": "5.7.3"
+  }
+}

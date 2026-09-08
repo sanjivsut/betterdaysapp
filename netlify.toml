@@ -1,0 +1,15 @@
+[build]
+  # schema.sql is idempotent, so applying it on every deploy is safe and means
+  # there is no separate manual migration step. Requires a linked Netlify
+  # Database (provides NETLIFY_DATABASE_URL at build time).
+  command = "npm run db:migrate && npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Netlify's official Next.js runtime. It serves SSG pages as static assets and
+# only invokes functions for routes that need server logic (route handlers,
+# auth callbacks).
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
