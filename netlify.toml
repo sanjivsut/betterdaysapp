@@ -1,9 +1,10 @@
 [build]
-  # schema.sql is idempotent, so applying it on every deploy is safe and means
-  # there is no separate manual migration step. Requires a linked Netlify
-  # Database (provides NETLIFY_DATABASE_URL at build time).
-  command = "npm run db:migrate && npm run build"
+  command = "npm run build"
   publish = ".next"
+  # Run migrations manually against the production DB, once:
+  #   DATABASE_URL="<prod connection string>" npm run db:migrate
+  # (or paste src/lib/schema.sql into the Netlify DB SQL console). schema.sql
+  # is idempotent, so re-running it is safe.
 
 [build.environment]
   NODE_VERSION = "20"

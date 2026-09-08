@@ -15,7 +15,7 @@ This is the free, pre-monetization MVP. Payments are intentionally not built;
 | App pages      | Client-rendered behind auth (`/app/*`), `noindex` |
 | Styling        | Tailwind CSS |
 | Backend        | Next.js route handlers → deployed as Netlify Functions |
-| Database       | Netlify Database (managed Postgres / Neon) via `@neondatabase/serverless` |
+| Database       | Postgres (local: Docker; prod: Netlify Database) via `pg` |
 | Auth           | Auth.js (NextAuth v5): email/password + Google, Postgres adapter, JWT sessions |
 | Charts         | Recharts |
 | Hosting        | Netlify (`@netlify/plugin-nextjs`) |
@@ -26,15 +26,16 @@ No route uses `dynamic = 'force-dynamic'` / per-request SSR by design.
 
 ```bash
 npm install
-cp .env.example .env.local     # then fill in DATABASE_URL and AUTH_SECRET
+cp .env.example .env.local     # then fill in AUTH_SECRET (+ Google keys, optional)
+docker-compose up -d           # local Postgres on localhost:5432
 npm run db:migrate             # applies src/lib/schema.sql (idempotent)
-npm run icons:generate         # regenerate PWA icons (already committed)
 npm run dev
 ```
 
-You need a Postgres connection string in `DATABASE_URL` (Neon's free tier works).
+`.env.example` already points `DATABASE_URL` at the Docker Postgres.
 `AUTH_SECRET` can be any random string locally. Google sign-in needs
 `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET`; without them, email/password still works.
+`npm run icons:generate` regenerates the PWA icons (already committed).
 
 ### Make yourself an admin
 
@@ -82,10 +83,18 @@ scripts/              migrate.mjs, generate-icons.mjs
 ## Deploy (Netlify)
 
 1. Connect the repo. Netlify auto-detects Next.js (`netlify.toml` pins Node 20
-   and the Next runtime plugin).
-2. Add a Netlify Database — it injects `NETLIFY_DATABASE_URL`.
-3. Set env vars: `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`,
-   `NEXT_PUBLIC_SITE_URL`, `AUTH_TRUST_HOST=true`.
-4. Run the schema once against the database (`npm run db:migrate` with
-   `DATABASE_URL` set to the Netlify database URL, or via a one-off).
+   and the Next runtime plugin). Build command is just `npm run build`.
+2. Add a Netlify Database — it injects `NETLIFY_DATABASE_URL` (the app reads
+   `DATABASE_URL` first, then `NETLIFY_DATABASE_URL`, so don't also set a
+   `DATABASE_URL` unless it points at that same database).
+3. Set env vars: `AUTH_SECRET` (fresh random), `AUTH_URL` (the site URL),
+   `AUTH_TRUST_HOST=true`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`,
+   `NEXT_PUBLIC_SITE_URL` (the site URL — build-time, redeploy after setting).
+4. Apply the schema once, from your machine, against the prod DB:
+   `DATABASE_URL="<prod url>" npm run db:migrate`
+   (or paste `src/lib/schema.sql` into the Netlify DB SQL console).
+5. In Google Cloud, add the prod redirect URI
+   `https://<site>/api/auth/callback/google` and publish the consent screen.
+6. After first login, promote yourself:
+   `UPDATE users SET is_admin = true WHERE email = '<you>';`
 ```
