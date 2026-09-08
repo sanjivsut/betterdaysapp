@@ -5,8 +5,10 @@ import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { ThemeToggle } from '@/components/settings/ThemeToggle';
+import { InstallCard } from '@/components/pwa/InstallCard';
 import { HabitFormSheet } from '@/components/habits/HabitFormSheet';
 import { apiGet, apiSend } from '@/lib/client';
+import { useReconnect } from '@/lib/use-online';
 import type { Habit } from '@/lib/habits';
 
 interface ReminderRow {
@@ -59,6 +61,9 @@ export function SettingsView() {
   useEffect(() => {
     load().catch((e) => setMsg(e instanceof Error ? e.message : 'Load failed'));
   }, [load]);
+  useReconnect(() => {
+    load().catch(() => undefined);
+  });
 
   async function removeHabit(id: string) {
     if (!confirm('Delete this habit and all its entries?')) return;
@@ -133,12 +138,8 @@ export function SettingsView() {
         <ThemeToggle />
       </Section>
 
-      <Section title="Install">
-        <p className="text-sm text-content-muted">
-          Better Days is a Progressive Web App. On mobile, use your browser&apos;s
-          &ldquo;Add to Home Screen&rdquo;. On desktop Chrome or Edge, use the
-          install icon in the address bar for an app window and offline access.
-        </p>
+      <Section title="Add to your home screen">
+        <InstallCard />
       </Section>
 
       <Button

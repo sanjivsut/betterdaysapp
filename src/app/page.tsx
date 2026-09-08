@@ -4,6 +4,8 @@ import { SiteHeader } from '@/components/marketing/SiteHeader';
 import { SiteFooter } from '@/components/marketing/SiteFooter';
 import { HeroDecor } from '@/components/marketing/HeroDecor';
 import { AppPreview } from '@/components/marketing/AppPreview';
+import { Walkthrough } from '@/components/marketing/Walkthrough';
+import { InstallBanner } from '@/components/pwa/InstallBanner';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { pageMetadata } from '@/lib/seo';
@@ -29,14 +31,14 @@ const STEPS = [
     color: 'text-success',
     bg: 'bg-success/12',
     title: 'Track it',
-    body: 'Every entry feeds a running picture of your progress: current streaks, weekly completion, and how this week compares with your own historical baseline.',
+    body: 'Every entry builds a clear picture of your progress — your current streak, how much you have done this week, and how that compares with what is normal for you.',
   },
   {
     icon: 'bulb',
     color: 'text-[#3b82c4]',
     bg: 'bg-[#3b82c4]/12',
     title: 'Learn from it',
-    body: 'Better Days reads back your own logged notes and surfaces the patterns — the days, places and triggers where a habit tends to slip — so you can plan around them.',
+    body: 'Better Days looks back over your own notes and shows you the patterns — the days, places and moods where a habit tends to slip — so you can plan around them.',
   },
 ];
 
@@ -48,13 +50,13 @@ const BENEFITS = [
   },
   {
     icon: 'notes',
-    title: 'Context-based logging',
-    body: 'Log the amount and the story behind it. Habit tracking that remembers the "why", not just the "did you".',
+    title: 'Notes, not just checkmarks',
+    body: 'Record how much, and what was going on. Better Days remembers the story behind each habit — not just a yes or no.',
   },
   {
     icon: 'device-mobile-share',
-    title: 'Install on any device',
-    body: 'Better Days is a Progressive Web App — add it to your phone or desktop home screen and it works offline.',
+    title: 'Works on every device',
+    body: 'Add Better Days to your phone or computer home screen and open it like any other app. It keeps working even without a connection.',
   },
   {
     icon: 'lock',
@@ -70,19 +72,19 @@ const FAQS = [
   },
   {
     q: 'Can I track habits I want to quit or reduce?',
-    a: 'Yes. Every habit is either a "build" habit (do more of it) or a "break" habit (do less of it). Break habits let you log both good instances and slips, and the trend compares your recent average with your usual baseline.',
+    a: 'Yes. Mark a habit as one to build (do more of) or one to break (do less of). For a break habit you can log both the good days and the slips, and Better Days shows whether you are above or below what is usual for you.',
   },
   {
     q: 'Is Better Days free?',
-    a: 'Yes. The current version is completely free, including habit tracking, progress charts, reminders and rule-based insights. Paid tiers may come later, but the core experience will stay free.',
+    a: 'Yes. The current version is completely free — habit tracking, progress charts, reminders and tips based on your own history. Paid plans may come later, but the core stays free.',
   },
   {
     q: 'Do I need to install an app from an app store?',
-    a: 'No. Better Days is a Progressive Web App. Open it in your browser and choose "Add to Home Screen" (or the install prompt on desktop) to get an app-like icon and offline access.',
+    a: 'No. Open Better Days in your browser, then choose "Add to Home Screen" on your phone or "Install" on your computer to get an icon you can tap like a normal app. It also works offline.',
   },
   {
     q: 'Will I get reminders at the right time?',
-    a: 'You set one daily reminder time per habit, and it fires in your local timezone, which you confirm during a short onboarding step.',
+    a: 'Yes. You choose one reminder time per habit, and it arrives in your local time — you set your timezone once when you first sign in.',
   },
 ];
 
@@ -104,6 +106,12 @@ export default function LandingPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <SiteHeader />
+
+      {/* Shows only when the browser can install the app (or on iOS Safari);
+          `empty:hidden` collapses the wrapper when the banner renders nothing. */}
+      <div className="mx-auto max-w-app px-4 pt-4 empty:hidden sm:px-6">
+        <InstallBanner />
+      </div>
 
       <main>
         {/* ---------- Hero ---------- */}
@@ -187,6 +195,24 @@ export default function LandingPage() {
               </li>
             ))}
           </ol>
+        </section>
+
+        {/* ---------- Walkthrough (one real example) ---------- */}
+        <section className="bg-surface">
+          <div className="mx-auto max-w-app px-4 py-16 sm:px-6 sm:py-20">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="font-display text-3xl font-semibold">
+                See it with one habit
+              </h2>
+              <p className="mt-3 text-content-muted">
+                Here is the whole loop for someone cutting down on sugar — add,
+                log, see the trend, learn from it.
+              </p>
+            </div>
+            <div className="mt-12">
+              <Walkthrough />
+            </div>
+          </div>
         </section>
 
         {/* ---------- Why Better Days ---------- */}

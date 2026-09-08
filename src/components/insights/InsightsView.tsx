@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { apiGet } from '@/lib/client';
+import { useReconnect } from '@/lib/use-online';
 import type { Insight } from '@/lib/insights';
 
 const TONE: Record<Insight['tone'], { icon: string; cls: string }> = {
@@ -15,19 +16,33 @@ export function InsightsView() {
   const [insights, setInsights] = useState<Insight[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     apiGet<{ insights: Insight[] }>('/api/insights')
-      .then((res) => setInsights(res.insights))
+      .then((res) => {
+        setInsights(res.insights);
+        setError(null);
+      })
       .catch((err) =>
-        setError(err instanceof Error ? err.message : 'Could not load insights.'),
+        setError(
+          typeof navigator !== 'undefined' && !navigator.onLine
+            ? "You're offline — insights will load once you reconnect."
+            : err instanceof Error
+              ? err.message
+              : 'Could not load insights.',
+        ),
       );
   }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+  useReconnect(load);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-5 md:px-6">
       <h1 className="mb-1 text-xl font-semibold">Insights</h1>
       <p className="mb-4 text-sm text-content-muted">
-        Patterns spotted in your own logged history.
+        Patterns we have noticed in your own history.
       </p>
 
       {error && (
@@ -71,7 +86,7 @@ export function InsightsView() {
       */}
       <p className="mt-6 flex items-center gap-1.5 text-xs text-content-subtle">
         <Icon name="sparkles" />
-        Deeper, note-based insights are coming.
+        More detailed insights from your notes are on the way.
       </p>
     </div>
   );

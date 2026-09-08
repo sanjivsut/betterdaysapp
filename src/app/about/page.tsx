@@ -33,14 +33,15 @@ export default function AboutPage() {
           </p>
           <p>
             The app works for habits you want to build and habits you want to
-            break. Progress is always measured against your own baseline, so a
-            week where you had one slice of cake instead of your usual three is
-            correctly shown as progress, not failure.
+            break. Progress is always measured against what is normal for you, so
+            a week where you had one slice of cake instead of your usual three is
+            shown as progress, not failure.
           </p>
           <p>
-            Better Days is a Progressive Web App: install it on your phone or
-            desktop, use it offline, and get a single gentle daily reminder per
-            habit in your local timezone. The current version is free.
+            You can add Better Days to your phone or computer home screen and use
+            it like any other app, even offline, and set one gentle daily
+            reminder per habit in your own local time. The current version is
+            free.
           </p>
         </div>
       </main>

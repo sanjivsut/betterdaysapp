@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Area,
   AreaChart,
@@ -12,6 +12,7 @@ import {
 } from 'recharts';
 import { Icon } from '@/components/ui/Icon';
 import { apiGet } from '@/lib/client';
+import { useReconnect } from '@/lib/use-online';
 import type { Habit } from '@/lib/habits';
 
 interface ProgressResponse {
@@ -33,7 +34,7 @@ export function ProgressView() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     setLoading(true);
     apiGet<ProgressResponse>(`/api/progress?days=${days}`)
       .then((res) => {
@@ -42,10 +43,21 @@ export function ProgressView() {
         setError(null);
       })
       .catch((err) =>
-        setError(err instanceof Error ? err.message : 'Could not load progress.'),
+        setError(
+          typeof navigator !== 'undefined' && !navigator.onLine
+            ? "You're offline — progress will load once you reconnect."
+            : err instanceof Error
+              ? err.message
+              : 'Could not load progress.',
+        ),
       )
       .finally(() => setLoading(false));
   }, [days]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+  useReconnect(load);
 
   const habit = data?.habits.find((h) => h.id === activeHabit) ?? null;
   const chartData = useMemo(() => {

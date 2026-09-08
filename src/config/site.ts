@@ -28,7 +28,7 @@ export const siteConfig = {
   tagline: 'Small steps. Better days.',
   splashTagline: 'Small steps, every day',
   description:
-    'Better Days is a habit tracker that logs the story behind each habit, not just a checkmark. Build good habits, break bad ones, and see your own trends over time.',
+    'Better Days is a habit tracker that keeps the story behind each habit, not just a checkmark. Build good habits, break bad ones, and watch your own trends improve over time.',
   themeColor: '#e8734a',
   url: resolveSiteUrl(),
   ogImage: '/og.png',

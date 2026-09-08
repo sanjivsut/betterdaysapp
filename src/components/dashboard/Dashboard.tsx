@@ -8,7 +8,9 @@ import { HabitCard } from '@/components/dashboard/HabitCard';
 import { InsightBanner } from '@/components/dashboard/InsightBanner';
 import { QuickLogSheet } from '@/components/dashboard/QuickLogSheet';
 import { HabitFormSheet } from '@/components/habits/HabitFormSheet';
+import { InstallBanner } from '@/components/pwa/InstallBanner';
 import { apiGet } from '@/lib/client';
+import { useReconnect } from '@/lib/use-online';
 import type { DashboardResponse } from '@/types/api';
 
 export function Dashboard() {
@@ -23,7 +25,13 @@ export function Dashboard() {
       setData(await apiGet<DashboardResponse>('/api/dashboard'));
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load your dashboard.');
+      setError(
+        typeof navigator !== 'undefined' && !navigator.onLine
+          ? "You're offline — your habits will load as soon as you reconnect."
+          : err instanceof Error
+            ? err.message
+            : 'Could not load your dashboard.',
+      );
     } finally {
       setLoading(false);
     }
@@ -32,6 +40,9 @@ export function Dashboard() {
   useEffect(() => {
     load();
   }, [load]);
+
+  // Auto-refresh when the connection comes back.
+  useReconnect(load);
 
   const quickLogHabit = data?.cards.find((c) => c.habit.id === quickLogId)?.habit;
 
@@ -43,6 +54,8 @@ export function Dashboard() {
           <Icon name="plus" /> New habit
         </Button>
       </div>
+
+      <InstallBanner />
 
       {loading && <SkeletonList />}
 

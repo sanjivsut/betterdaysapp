@@ -25,9 +25,9 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-semibold text-content">What we store</h2>
             <p className="mt-2">
-              Your email address, a hashed password (if you sign up with
-              email/password), your display name and timezone, and the habits and
-              log entries you create — including the free-text notes you add.
+              Your email address, your password (stored scrambled, never in
+              plain text) if you sign up with email, your name and timezone, and
+              the habits and entries you create — including the notes you write.
             </p>
           </section>
           <section>
@@ -35,9 +35,9 @@ export default function PrivacyPage() {
               How it is used
             </h2>
             <p className="mt-2">
-              Your habit data is used only to show you your dashboard, progress
-              charts and insights. Insights are generated from your own logged
-              history. We do not sell your data or use it for advertising.
+              Your habit data is used only to show you your own dashboard,
+              charts and tips. The tips come from your own history and nobody
+              else&apos;s. We do not sell your data or use it for advertising.
             </p>
           </section>
           <section>
@@ -45,10 +45,11 @@ export default function PrivacyPage() {
               Third parties
             </h2>
             <p className="mt-2">
-              Sign-in can be handled by Google if you choose that option.
-              Notifications may be delivered through a push provider. Hosting and
-              the database are managed infrastructure providers. Each only
-              receives what it needs to perform its function.
+              If you choose &ldquo;Continue with Google&rdquo;, Google handles
+              that sign-in. A few trusted service providers help run Better Days
+              — for example to deliver reminder notifications — and each one only
+              receives what it needs to do its job. None of them are given your
+              data to use for their own purposes.
             </p>
           </section>
           <section>

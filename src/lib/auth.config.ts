@@ -24,7 +24,15 @@ const credentialsSchema = z.object({
 
 export const authConfig = {
   trustHost: true,
-  session: { strategy: 'jwt' },
+  session: {
+    strategy: 'jwt',
+    // Stay signed in until an explicit sign-out. The window is renewed on
+    // every visit (at most once a day), so an active user is never logged
+    // out; 365 days is the practical ceiling since browsers cap cookie
+    // lifetime at ~400 days.
+    maxAge: 60 * 60 * 24 * 365,
+    updateAge: 60 * 60 * 24,
+  },
   pages: { signIn: '/login' },
   providers: [
     Google({

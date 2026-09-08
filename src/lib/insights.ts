@@ -108,7 +108,7 @@ export function computeInsights(inputs: InsightInput[]): Insight[] {
     out.push({
       id: 'default',
       habitId: null,
-      text: 'Log a few more days and patterns in your notes will start to show up here.',
+      text: 'Add a few more days of entries and patterns from your notes will start to show up here.',
       tone: 'neutral',
     });
   }
